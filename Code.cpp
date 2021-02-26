@@ -20,7 +20,9 @@ void arrayVulnerability(int i)
     int buffer[4];
     bool access = false;
     bool * ptr = &access;
+
     buffer[i] = -1;
+
     cout << "Access should be 0: " << access << endl;
 }
 
@@ -60,23 +62,32 @@ void arrayExploit()
  * 2. There must be a way to overwrite the pointer
  * 3. After the pointer is overwritten, the pointer is dereferenced
  ****************************************/
-void psVulnerability(long * array, int size) {
-  long buffer[2];
-  char message[100] = "Safe";
-  for (int i = 0; i < size; i++) {
-    buffer[i] = array[i];
-  }
-  cout << "Message is: \"" << message << "\".\n";
+void psVulnerability(bool exploit) {
+    size_t input;
+    long buffer[1];
+    char * p1 = "Safe";
+
+    cout << "Point Address: " << &p1 << endl;
+    cout << "Buffer Exploit Address: " << &buffer[-3] << endl;
+
+    if (exploit == true) {
+        buffer[-3] = 6421896;
+    }
+
+    cout << "Message is: \"" << p1 << "\".\n";
 }
+
 /*************************************
  * Pointer Subterfuge WORKING
  * Call psVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
 void psWorking() {
-  long array[2] = {1, 1};
-  psVulnerability(array, 1);
+  cout << "Working Function:" << endl;
+  bool exploit = false;
+  psVulnerability(exploit);
 }
+
 /****************************************
  * Pointer Subterfuge Exploitation
  * 1. The attacker must exploit a vulnerability allowing
@@ -85,9 +96,11 @@ void psWorking() {
  *    referring to data altering the normal flow of the program
  ****************************************/
 void psExploit() {
-    long array[3] = {1, 1, (long)"Dangerous"};
-    psVulnerability(array, 3);
+    cout << "Exploit Function:" << endl;
+    bool exploit = true;
+    psVulnerability(exploit);
 }
+
 /********************************************************************
 * 3. ---------ARC INJECTION--------------------------------------
  ***********************************************************************/
@@ -109,6 +122,7 @@ void arcVulnerability(int size, long * array) {
   cout << "ARC Velnerability is: \"";
   pointer_function();
 }
+
 /*************************************
  * ARC WORKING
  * Call intVulnerability() in a way that does
@@ -118,6 +132,7 @@ void arcWorking() {
     long array[2] = {1, 1};
     arcVulnerability(1, array);
 }
+
 /*********************************
  * ARC EXPLOIT
  * 1. The attacker must exploit a vulnerability allowing
@@ -129,6 +144,7 @@ void arcExploit() {
   long array[3] = {1, 1, (long)psExploit};
   arcVulnerability(3, array);
 }
+
  /**********************************************************
 * 4. -----------------VTABLE SPRAYING--------------------
  ************************************************************************/
@@ -143,6 +159,7 @@ void arcExploit() {
  **********************************/
 void Vulnerability () {
 }
+
 /*************************************
  * VTable WORKING
  * Call Vulnerability() in a way that does
@@ -150,6 +167,7 @@ void Vulnerability () {
  ***********************************/
 void vtableWorking() {
 }
+
 /************************************
  * VTABLE EXPLOIT
  * 1. Through some vulnerability, the VTable pointer
@@ -159,6 +177,7 @@ void vtableWorking() {
  ***********************************/
 void vtableExploit() {
  }
+
  /***********************************************************
 * 5. -------------------STACK SMASHING------------------------
  ***********************************************************************/
@@ -176,6 +195,7 @@ void stackVulnerability(long c) {
   }
   cout << *integer << endl;
 }
+
 /*************************************
  * Stack Smashing WORKING
  * Call stackVulnerability() in a way that does
@@ -186,6 +206,7 @@ void stackWorking() {
     cout << "The Stack Smashing is None-Malicious" << endl;
     stackVulnerability(working);
 }
+
 /*********************************************
  * STACK EXPLOIT
  * 1. The attacker must provide more data into the
@@ -205,6 +226,7 @@ void stackExploit() {
     cout << "The Stack Smashing is Malicious" << endl;
     stackVulnerability(exploit);
 }
+
  /********************************************************
 * 6. -----------------HEAP SPRAYING----------------
  ****************************************/
@@ -228,6 +250,7 @@ void heapVulnerability(char *input, int d) {
     delete [] bufferOne;
     cout << "The Heap Velnerability is good" << endl;
 }
+
 /*************************************
  * Heap Spraying WORKING
  * Call heapVulnerability() in a way that does
@@ -238,6 +261,7 @@ void heapWorking() {
     int working_size = 4;
     heapVulnerability(input, working_size);
 }
+
 /*************************************
  * HEAP EXPLOIT
  * 1. The attacker must provide more data into the outwardly facing
@@ -252,6 +276,7 @@ void heapExploit() {
     char input[128] = "This is Computer Security Class in Winter 2021.";
   heapVulnerability(input, size);
 }
+
  /******************************************************
 * 7. ---------------IINTEGER OVERFLOW-------------------
  ********************************************************/
@@ -275,6 +300,7 @@ void intVulnerability(int offset) {
     cout << "Exploiting " << offset << " IV is Unsucessfully Accesed.." << endl;
   }
 }
+
 /*************************************
  * INTEGER WORKING
  * Call intVulnerability() in a way that does
@@ -284,6 +310,7 @@ void intWorking() {
   long working = 100;
   intVulnerability(working);
 }
+
 /**********************************************
  * INTEGER EXPLOIT
  * 1. Provide input, either a buffer size or a single value,
@@ -295,6 +322,7 @@ void intExploit() {
   long exploit = 6745;
   intVulnerability(exploit);
 }
+
 /*********************************************************
 * 8. -------------ANSI-UNICODE CONVERSION------------------
  ******************************************************************/
@@ -307,6 +335,7 @@ void intExploit() {
 void ansiVulnerability(int number) {
   long unicodeText[number];
 }
+
 /**************************************
  * ANSI WORKING
  * Call ansiVulnerability() in a way that does
@@ -314,6 +343,7 @@ void ansiVulnerability(int number) {
  *************************************/
 void ansiWorking() {
 }
+
 /***********************************************
  * ASCI - UNICODE EXPLOIT
  * 1. The attacker must provide more than half as much data
@@ -322,6 +352,7 @@ void ansiWorking() {
  **********************************************/
 void ansiExploit() {
 }
+
 /*************************************
 * Main Function will call all functions
  ****************************************/
@@ -336,20 +367,24 @@ int main() {
   cout << "8. ANSI-Unicode Conversion" << endl;
 
   int choose; // Variable for selecting vulnerability
-  cout << "Which vulnerability do you want to explore? Select your number:";
+  cout << "Which vulnerability do you want to explore? Select your number: ";
   cin >> choose;
   switch (choose) {
     case 1:
+      cout << endl;
       arrayWorking();
+      cout << endl;
       arrayExploit();
       break;
     case 2:
+      cout << endl;
       psWorking();
+      cout << endl;
       psExploit();
       break;
     case 3:
       arcWorking();
-      arcExploit();
+//      arcExploit();
       break;
     case 4:
       vtableWorking();
