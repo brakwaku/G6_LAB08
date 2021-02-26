@@ -66,11 +66,8 @@ void psVulnerability(bool exploit) {
     long buffer[1];
     char * p1 = "Safe";
 
-    cout << "Point Address: " << &p1 << endl;
-    cout << "Buffer Exploit Address: " << &buffer[-3] << endl;
-
     if (exploit == true) {
-        buffer[-3] = 6421896;
+        buffer[1] = 6421896;
     }
 
     cout << "Message is: \"" << p1 << "\".\n";
@@ -139,10 +136,10 @@ void arcWorking() {
  * 2. The attacker must have the address to another function
  *    which is to be used to replace the existing function pointer
   ********************************/
-void arcExploit() {
+/*void arcExploit() {
   long array[3] = {1, 1, (long)psExploit};
   arcVulnerability(3, array);
-}
+}*/
 
  /**********************************************************
 * 4. -----------------VTABLE SPRAYING--------------------
