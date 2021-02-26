@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 using namespace std;
+
 /************************************************************
 * 1. -------ARRAY INDEX------
  ********************************************************/
@@ -14,18 +15,17 @@ using namespace std;
  * 2. The array index variable must be reachable through external input.
  * 3. There must not be bounds checking on the array index variable.
  ****************************************/
-void arrayVulnerability(long a)
+void arrayVulnerability(int i)
 {
-  char buffer[10] = {};
-  bool access = false;
-  buffer[a] = 5;
-  cout << endl << "The Array Index: " << endl;
-  if (access == false) {
-    cout << "Authenticated = " << acces << endl;
-  } else {
-    cout << "Access: Not Granted and Dangerous" << endl;
-  }
+    int buffer[4];
+    bool access = false;
+    bool * ptr = &access;
+
+    buffer[i] = -1;
+
+    cout << "Access should be 0: " << access << endl;
 }
+
 /**************************************
  * ARRAY WORKING
  * Call arrayVulnerability() in a way that does
@@ -33,9 +33,11 @@ void arrayVulnerability(long a)
  *************************************/
 void arrayWorking()
 {
-  long working = 1;
-  arrayVulnerability(working);
+    cout << "Working Function: " << endl;
+    int working = 1;
+    arrayVulnerability(working);
 }
+
 /**************************************
  * ARRAY EXPLOIT
  * 1. The attacker provides an array index value outside the expected range
@@ -46,8 +48,9 @@ void arrayWorking()
  *************************************/
 void arrayExploit()
 {
-  long exploit = -1;
-  arrayVulnerability(exploit);
+    cout << "Exploit Function: " << endl;
+    int exploit = -1;
+    arrayVulnerability(exploit);
 }
 
 /*****************************************************
@@ -68,11 +71,11 @@ void psVulnerability(long * array, int size) {
   cout << "Message is: \"" << message << "\".\n";
 }
 /*************************************
- * Pointer Subterfuge WORKING 
+ * Pointer Subterfuge WORKING
  * Call psVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
-void psWorking() { 
+void psWorking() {
   long array[2] = {1, 1};
   psVulnerability(array, 1);
 }
@@ -109,7 +112,7 @@ void arcVulnerability(int size, long * array) {
   pointer_function();
 }
 /*************************************
- * ARC WORKING 
+ * ARC WORKING
  * Call intVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
@@ -143,7 +146,7 @@ void arcExploit() {
 void Vulnerability () {
 }
 /*************************************
- * VTable WORKING 
+ * VTable WORKING
  * Call Vulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
@@ -176,7 +179,7 @@ void stackVulnerability(long c) {
   cout << *integer << endl;
 }
 /*************************************
- * Stack Smashing WORKING 
+ * Stack Smashing WORKING
  * Call stackVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
@@ -228,7 +231,7 @@ void heapVulnerability(char *input, int d) {
     cout << "The Heap Velnerability is good" << endl;
 }
 /*************************************
- * Heap Spraying WORKING 
+ * Heap Spraying WORKING
  * Call heapVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
@@ -249,7 +252,7 @@ void heapWorking() {
 void heapExploit() {
   int size = 128;
     char input[128] = "This is Computer Security Class in Winter 2021.";
-  heapVulnerability(input, size); 
+  heapVulnerability(input, size);
 }
  /******************************************************
 * 7. ---------------Integer Overflow-------------------
@@ -275,7 +278,7 @@ void intVulnerability(int offset) {
   }
 }
 /*************************************
- * INTEGER WORKING 
+ * INTEGER WORKING
  * Call intVulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
@@ -334,27 +337,27 @@ int main() {
   cout << "7. Integer Overflow" << endl;
   cout << "8. ANSI-Unicode Conversion" << endl;
 
-  int choose; // Variable for selecting vulnerability 
+  int choose; // Variable for selecting vulnerability
   cout << "Which vulnerability do you want to explore? Select your number:";
   cin >> choose;
   switch (choose) {
-    case 1: 
+    case 1:
       arrayWorking();
       arrayExploit();
       break;
-    case 2: 
+    case 2:
       psWorking();
       psExploit();
       break;
-    case 3: 
+    case 3:
       arcWorking();
       arcExploit();
       break;
-    case 4: 
+    case 4:
       vtableWorking();
       vtableExploit();
       break;
-    case 5: 
+    case 5:
       stackWorking();
       stackExploit();
       break;
