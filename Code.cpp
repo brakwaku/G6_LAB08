@@ -288,7 +288,7 @@ void intVulnerability(int offset) {
   int *sentinel = buffer + 256; // end of buffer
   // cout << offset << endl;
   //cin >> offset;
-  cout << endl << "Integer Vulnerability: ";
+  cout << "Integer Vulnerability: ";
   if (offset + buffer < sentinel) {
     //cin >> buffer[offset];
     cout << "Working " << offset << " IV is Sucessfully Accessed!" << endl;
@@ -303,6 +303,7 @@ void intVulnerability(int offset) {
  * not yield unexpected behavior
  ***********************************/
 void intWorking() {
+  cout << "Working function:" << endl;
   long working = 100;
   intVulnerability(working);
 }
@@ -315,6 +316,7 @@ void intWorking() {
  *    resulting in an overflow or underflow condition
  **********************************************/
 void intExploit() {
+  cout << "Exploit function:" << endl;
   long exploit = 6745;
   intVulnerability(exploit);
 }
@@ -395,7 +397,9 @@ int main() {
       heapExploit();
       break;
     case 7:
+      cout << endl;
       intWorking();
+      cout << endl;
       intExploit();
       break;
     case 8:
