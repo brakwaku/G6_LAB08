@@ -63,7 +63,6 @@ void arrayExploit()
  * 3. After the pointer is overwritten, the pointer is dereferenced
  ****************************************/
 void psVulnerability(bool exploit) {
-    size_t input;
     long buffer[1];
     char * p1 = "Safe";
 
