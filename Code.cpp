@@ -21,7 +21,7 @@ void arrayVulnerability(long a)
   buffer[a] = 5;
   cout << endl << "The Array Index: " << endl;
   if (access == false) {
-    cout << "Access: Granted and Safe" << endl;
+    cout << "Authenticated = " << acces << endl;
   } else {
     cout << "Access: Not Granted and Dangerous" << endl;
   }
@@ -51,7 +51,7 @@ void arrayExploit()
 }
 
 /*****************************************************
-* 2. -----------Pointer Subterfuge----------
+* 2. -----------POINTER SUBTERFUGE----------
  *******************************************************/
 /****************************************
  * Pointer Subterfuge Vulnerability
