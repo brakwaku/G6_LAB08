@@ -154,7 +154,7 @@ void arcExploit() {
     arcVulnerability(exploit);
 }
 
- /**********************************************************
+  /**********************************************************
 * 4. -----------------VTABLE SPRAYING--------------------
  ************************************************************************/
 /***********************************
@@ -166,17 +166,37 @@ void arcExploit() {
  * 4. After a virtual function pointer is overwritten,
  *    the virtual function must be called.
  **********************************/
-void Vulnerability () {
-}
+class Vulnerability {
+public:
+    long buffer[2];
+    
+    void setNumber(long value, int index) {
+        buffer[index] = value;
+    }
+    virtual void display() const = 0;
+};
 
+class Safe : public Vulnerability {
+public:
+    virtual void display() const {
+        std::cout << "  => Safe mode\n";
+    }
+};
+
+void dangerous() {
+    std::cout << "  => Red / Danger zone";
+};
 /*************************************
  * VTable WORKING
  * Call Vulnerability() in a way that does
  * not yield unexpected behavior
  ***********************************/
 void vtableWorking() {
+    std::cout << "\nVtable working\n";
+    Safe safe;
+    safe.setNumber(2, 2);
+    safe.display();
 }
-
 /************************************
  * VTABLE EXPLOIT
  * 1. Through some vulnerability, the VTable pointer
@@ -185,6 +205,12 @@ void vtableWorking() {
  *     or a function pointer
  ***********************************/
 void vtableExploit() {
+    std::cout << "\nVtable exploited\n";
+    Safe safe;
+    void (*pointerFunction)() = dangerous;
+    
+    safe.setNumber((long)pointerFunction, -5);
+    safe.display();
  }
 
 /***********************************************************
