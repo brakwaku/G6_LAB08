@@ -168,13 +168,14 @@ void vtableExploit() {
  * 2. the buffer must be reachable from an external input
  * 3. The mechanism to fill the buffer must not check the correct buffersize
  **********************************************/
-void stackVulnerability(long c) {
-  long integer[32];
-  cout << "Ingeters: ";
-  for (int i = 0; i < c; i++) {
-    integer[i] = c;
-  }
-  cout << *integer << endl;
+long int show_stack_fail() {
+    cout << "   => Malicious exploits" << endl;
+    return 0;
+}
+
+void stackVulnerability(long index, long data) {
+    long int buffer[2];
+    buffer[index] = data;
 }
 /*************************************
  * Stack Smashing WORKING
@@ -182,9 +183,9 @@ void stackVulnerability(long c) {
  * not yield unexpected behavior
  ***********************************/
 void stackWorking() {
-    long working = 1;
-    cout << "The Stack Smashing is None-Malicious" << endl;
-    stackVulnerability(working);
+    cout << "\nStack Working" << endl;
+    cout << "   => The Stack Smashing is None-Malicious" << endl;
+    stackVulnerability(1, 4);
 }
 /*********************************************
  * STACK EXPLOIT
@@ -201,9 +202,9 @@ void stackWorking() {
  *    machine language in step 3.
  *********************************************/
 void stackExploit() {
-    long exploit = 9876543213;
-    cout << "The Stack Smashing is Malicious" << endl;
-    stackVulnerability(exploit);
+    cout << "Stack Smashing (Exploitation)" << endl;
+    stackVulnerability(5, (long int) &show_stack_fail);
+    cout << "This code should not run.";
 }
  /********************************************************
 * 6. -----------------HEAP SPRAYING----------------
@@ -336,7 +337,7 @@ int main() {
   cout << "8. ANSI-Unicode Conversion" << endl;
 
   int choose; // Variable for selecting vulnerability
-  cout << "Which vulnerability do you want to explore? Select your number:";
+  cout << "Which vulnerability do you want to explore? \nSelect your number: ";
   cin >> choose;
   switch (choose) {
     case 1:
