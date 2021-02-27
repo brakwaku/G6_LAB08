@@ -13,6 +13,9 @@
 #include <iomanip>
 using namespace std;
 
+void safe() { cout << "safe\n"; }
+void unsafe() { cout << "unsafe\n"; }
+
 /************************************************************
 * 1. -------ARRAY INDEX------
  ********************************************************/
@@ -117,14 +120,14 @@ void psExploit() {
  * 3. After the memory is overwritten, the function pointer must
  *    be dereferenced
  ********************************/
-void arcVulnerability(int size, long * array) {
-  long buffer[2];
-    void (* pointer_function)() = psWorking;
-  for (int i = 0; i < size; i++) {
-      buffer[i] = array[i];
-  }
-  cout << "ARC Velnerability is: \"";
-  pointer_function();
+void arcVulnerability(long * input) {
+    long * buffer[1];
+    void (* pointerFunction)() = safe;
+
+    buffer[1] = input;
+
+    cout << "The pointer function is ";
+    pointerFunction();
 }
 
 /*************************************
@@ -133,8 +136,9 @@ void arcVulnerability(int size, long * array) {
  * not yield unexpected behavior
  ***********************************/
 void arcWorking() {
-    long array[2] = {1, 1};
-    arcVulnerability(1, array);
+    cout << "Working Function:" << endl;
+    long * working = reinterpret_cast<long*>((void*)safe);
+    arcVulnerability(working);
 }
 
 /*********************************
@@ -144,10 +148,11 @@ void arcWorking() {
  * 2. The attacker must have the address to another function
  *    which is to be used to replace the existing function pointer
   ********************************/
-/*void arcExploit() {
-  long array[3] = {1, 1, (long)psExploit};
-  arcVulnerability(3, array);
-}*/
+void arcExploit() {
+    cout << "Exploit Function:" << endl;
+    long * exploit = reinterpret_cast<long*>((void*)unsafe);
+    arcVulnerability(exploit);
+}
 
  /**********************************************************
 * 4. -----------------VTABLE SPRAYING--------------------
@@ -182,8 +187,8 @@ void vtableWorking() {
 void vtableExploit() {
  }
 
- /***********************************************************
-* 5. -------------------STACK SMASHING------------------------
+/***********************************************************
+ * 5. -------------------STACK SMASHING------------------------
  ***********************************************************************/
 /***********************************************
  * STACK VULNERABILITY
@@ -191,21 +196,18 @@ void vtableExploit() {
  * 2. the buffer must be reachable from an external input
  * 3. The mechanism to fill the buffer must not check the correct buffersize
  **********************************************/
-void display(char * text) {
-  cout << text << endl;
-}
-
 void dangerous() {
   cout << "Stack Smashed!!!" << endl;
 }
 
 void stackVulnerability(char * input) {
-    char text[2] = "h";
+    char text[2];
+    int i = 0;
 
-    display(text);
+    for (char * p = input; *p; ++p, ++i) {
+        text[i] = *p;
+    }
 }
-
-
 
 /*************************************
  * Stack Smashing WORKING
@@ -214,8 +216,9 @@ void stackVulnerability(char * input) {
  ***********************************/
 void stackWorking() {
     cout << "Working Function:" << endl;
-    char working[2] = "H";
+    char working[2] = "!";
     stackVulnerability(working);
+    cout << "Finished" << endl;
 }
 
 /*********************************************
@@ -234,10 +237,10 @@ void stackWorking() {
  *********************************************/
 void stackExploit() {
     cout << "Exploit Function:" << endl;
-    void * address = (void*&)dangerous;
-    printf("Address: %d", address);
-    char exploit[50] = "AA";
+
+    char exploit[15] = "AA ìHåHU";
     stackVulnerability(exploit);
+    cout << "Finished" << endl;
 }
 
  /********************************************************
@@ -339,7 +342,7 @@ void intExploit() {
 }
 
 /*********************************************************
-* 8. -------------ANSI-UNICODE CONVERSION------------------
+ * 8. -------------ANSI-Unicode Conversion------------------
  ******************************************************************/
 /*********************************************************
  * ANSI - UNICODE VULNERABILITY
@@ -347,25 +350,37 @@ void intExploit() {
  * 2. Validation of the buffer must check the size of the buffer
  *    rather than the number of elements in the buffer.
  ********************************************************/
-void ansiVulnerability(int number) {
-  long unicodeText[number];
+void ansiVulnerability(char text[], int size) {
+    cout << "Reading String: ";
+    for (int i = 0; i < size - 1; i++) {
+            cout<< text[i];
+    }
+    cout << endl << endl;
 }
-
 /**************************************
  * ANSI WORKING
  * Call ansiVulnerability() in a way that does
  * not yield unexpected behavior
  *************************************/
 void ansiWorking() {
+    cout << "Working Function: \n"
+         << "Passing ANSI string: 123 \n";
+    char ansi[] = "123";
+    ansiVulnerability (ansi, sizeof(ansi));
 }
-
 /***********************************************
  * ASCI - UNICODE EXPLOIT
  * 1. The attacker must provide more than half as much data
  *    into the outwardly facing buffer as it is designed to hold
- * 2. From here, a variety of injection attacks are possible. The most likely candidates are stack smashing or heap smashing. In the above *  example, the third parameter of the copyUnicodeText() function is the number of elements in the string (256 elements), not the size of * the string (512 bytes). The end result is a buffer overrun of 256 bytes.
+ * 2. From here, a variety of injection attacks are possible.
+ *    The most likely candidates are stack smashing or heap smashing.
  **********************************************/
 void ansiExploit() {
+    cout << "Exploit Function: \n"
+         << "Passing UNICODE string: 123 \n";
+    short uni[] = {1,2,3};
+    char *convert = (char*)uni;
+    ansiVulnerability (convert, sizeof(uni));
 }
 
 /*************************************
@@ -398,15 +413,19 @@ int main() {
       psExploit();
       break;
     case 3:
+      cout << endl;
       arcWorking();
-//      arcExploit();
+      cout << endl;
+      arcExploit();
       break;
     case 4:
       vtableWorking();
       vtableExploit();
       break;
     case 5:
+      cout << endl;
       stackWorking();
+      cout << endl;
       stackExploit();
       break;
     case 6:
@@ -422,6 +441,7 @@ int main() {
       intExploit();
       break;
     case 8:
+      cout << endl;
       ansiWorking();
       ansiExploit();
       break;
