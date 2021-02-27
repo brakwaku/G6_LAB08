@@ -1,3 +1,10 @@
+/**********************************************
+ * Lab 07: Group 06
+ * Authors: Charles Rich, Kwaku Appau-Nkansah,
+ *  Jacob Muhlestein, Doug Barlow, Chad Smith,
+ *  and Ryan Budd
+ * Instructor: Brother Wilson
+ **********************************************/
 #include <iostream>
 #include <string>
 #include <cassert>
@@ -63,11 +70,12 @@ void arrayExploit()
  * 3. After the pointer is overwritten, the pointer is dereferenced
  ****************************************/
 void psVulnerability(bool exploit) {
-    long buffer[1];
+    long * buffer[1];
     char * p1 = "Safe";
+    char * p2 = "Unsafe";
 
     if (exploit == true) {
-        buffer[1] = 6421896;
+        buffer[1] = reinterpret_cast<long*>((void*&)p2);
     }
 
     cout << "Message is: \"" << p1 << "\".\n";
@@ -183,14 +191,21 @@ void vtableExploit() {
  * 2. the buffer must be reachable from an external input
  * 3. The mechanism to fill the buffer must not check the correct buffersize
  **********************************************/
-void stackVulnerability(long c) {
-  long integer[32];
-  cout << "Ingeters: ";
-  for (int i = 0; i < c; i++) {
-    integer[i] = c;
-  }
-  cout << *integer << endl;
+void display(char * text) {
+  cout << text << endl;
 }
+
+void dangerous() {
+  cout << "Stack Smashed!!!" << endl;
+}
+
+void stackVulnerability(char * input) {
+    char text[2] = "h";
+
+    display(text);
+}
+
+
 
 /*************************************
  * Stack Smashing WORKING
@@ -198,8 +213,8 @@ void stackVulnerability(long c) {
  * not yield unexpected behavior
  ***********************************/
 void stackWorking() {
-    long working = 1;
-    cout << "The Stack Smashing is None-Malicious" << endl;
+    cout << "Working Function:" << endl;
+    char working[2] = "H";
     stackVulnerability(working);
 }
 
@@ -218,8 +233,10 @@ void stackWorking() {
  *    machine language in step 3.
  *********************************************/
 void stackExploit() {
-    long exploit = 9876543213;
-    cout << "The Stack Smashing is Malicious" << endl;
+    cout << "Exploit Function:" << endl;
+    void * address = (void*&)dangerous;
+    printf("Address: %d", address);
+    char exploit[50] = "AA";
     stackVulnerability(exploit);
 }
 
@@ -244,7 +261,7 @@ void heapVulnerability(char *input, int d) {
     }
     delete [] bufferTwo; // free second buffer before the first one
     delete [] bufferOne;
-    cout << "The Heap Velnerability is good" << endl;
+    cout << "The Heap did not crash." << endl;
 }
 
 /*************************************
@@ -253,6 +270,7 @@ void heapVulnerability(char *input, int d) {
  * not yield unexpected behavior
  ***********************************/
 void heapWorking() {
+    cout << "Working Function:" << endl;
     char input[4] = "Hi";
     int working_size = 4;
     heapVulnerability(input, working_size);
@@ -268,8 +286,9 @@ void heapWorking() {
  *    of the memory overwrite and the new data to be overwritten
  ***********************************/
 void heapExploit() {
+  cout << "Exploit Function:" << endl;
   int size = 128;
-    char input[128] = "This is Computer Security Class in Winter 2021.";
+  char input[128] = "This is Computer Security Class in Winter 2021.";
   heapVulnerability(input, size);
 }
 
@@ -286,11 +305,9 @@ void heapExploit() {
 void intVulnerability(int offset) {
   int buffer[256];     // buffer
   int *sentinel = buffer + 256; // end of buffer
-  // cout << offset << endl;
-  //cin >> offset;
+
   cout << "Integer Vulnerability: ";
   if (offset + buffer < sentinel) {
-    //cin >> buffer[offset];
     cout << "Working " << offset << " IV is Sucessfully Accessed!" << endl;
   } else {
     cout << "Exploiting " << offset << " IV is Unsucessfully Accesed.." << endl;
@@ -393,7 +410,9 @@ int main() {
       stackExploit();
       break;
     case 6:
+      cout << endl;
       heapWorking();
+      cout << endl;
       heapExploit();
       break;
     case 7:
